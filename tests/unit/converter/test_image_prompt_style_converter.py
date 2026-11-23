@@ -345,3 +345,15 @@ def test_duplicate_variation_prefix_logs_warning(mock_target, caplog) -> None:
 
     assert "Duplicate variation key" in caplog.text
     assert converter._variation_map["bodycam_footage"] == "BODYCAM_FOOTAGE"
+
+
+def test_validate_filter_data_keyword_only() -> None:
+    valid_data = {
+        "style_instructions": "test instructions",
+        "variations": {"var1": "desc1"},
+    }
+    dummy_path = Path("fake_path.yaml")
+    ImagePromptStyleConverter._validate_filter_data(filter_data=valid_data, resolved_path=dummy_path)
+
+    with pytest.raises(TypeError):
+        ImagePromptStyleConverter._validate_filter_data(valid_data, dummy_path)  # type: ignore[misc]
